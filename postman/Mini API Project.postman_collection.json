@@ -89,7 +89,22 @@
 					"name": "404 case",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/countries/atlantis",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"countries",
+								"atlantis"
+							]
+						}
 					},
 					"response": []
 				},
@@ -238,7 +253,22 @@
 			"name": "Rate INR to ABC",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "https://api.frankfurter.dev/v2/rate/INR/ABC",
+					"protocol": "https",
+					"host": [
+						"api",
+						"frankfurter",
+						"dev"
+					],
+					"path": [
+						"v2",
+						"rate",
+						"INR",
+						"ABC"
+					]
+				}
 			},
 			"response": []
 		}
