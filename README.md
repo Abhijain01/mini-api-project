@@ -28,13 +28,13 @@ Open http://127.0.0.1:8000/docs.
 ## Run it with Docker
 
 ```bash
+cp .env.example .env        # Windows: copy .env.example .env
 docker build -t mini-api-project .
 docker run --rm -p 8000:8000 --env-file .env mini-api-project
 ```
 
-Open http://localhost:8000/docs. Press Ctrl+C to stop. Create `.env` first
-(see "Run it locally"); it is not baked into the image.
-
+Open http://localhost:8000/docs. Press Ctrl+C to stop. The `.env` file is not
+baked into the image, so it must exist before you run the container.
 ## Configuration
 
 Settings are read from environment variables, loaded from `.env`.
