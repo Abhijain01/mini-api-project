@@ -1,12 +1,14 @@
 """Adapter for the CountriesNow API.
 
-Hides its URLs and response shapes behind two simple methods.
-Knows nothing about FastAPI or HTTP status codes.
+Hides its URLs and response shapes behind two simple methods and logs every
+call. Knows nothing about FastAPI or HTTP status codes.
 """
 
+import time
 from dataclasses import dataclass
 
 import httpx
+from loguru import logger
 
 from exceptions import CountryNotFoundError, UpstreamError
 
@@ -39,13 +41,23 @@ class CountriesClient:
     def _get_data(self, endpoint: str, country: str) -> dict:
         # Always the /q version: without it CountriesNow redirects and httpx
         # does not follow redirects by default.
-        url = f"{self._base_url}/{endpoint}/q"
+        path = f"/{endpoint}/q"
+        started = time.perf_counter()
         try:
-            resp = httpx.get(url, params={"country": country}, timeout=self._timeout)
+            resp = httpx.get(
+                f"{self._base_url}{path}", params={"country": country}, timeout=self._timeout
+            )
         except httpx.HTTPError as exc:  # timeouts, connection errors, ...
+            ms = (time.perf_counter() - started) * 1000
+            reason = "timeout" if isinstance(exc, httpx.TimeoutException) else exc.__class__.__name__
+            logger.warning(f"CountriesNow GET {path} -> {reason} after {ms:.0f} ms")
             raise UpstreamError(
                 f"could not reach CountriesNow: {exc.__class__.__name__}"
             ) from exc
+
+        ms = (time.perf_counter() - started) * 1000
+        log = logger.warning if resp.status_code >= 500 else logger.info
+        log(f"CountriesNow GET {path} -> {resp.status_code} in {ms:.0f} ms")
 
         try:
             body = resp.json()
