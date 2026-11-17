@@ -1,12 +1,16 @@
-"""Our own error types. Clients and the service raise them; main.py turns them into HTTP responses."""
+"""Our own error types. Clients and services raise them; main.py turns them into HTTP responses."""
 
 
 class NotFoundError(Exception):
-    """Something we asked an outside API about does not exist."""
+    """Something we looked for does not exist."""
 
 
 class CountryNotFoundError(NotFoundError):
     """The country does not exist."""
+
+
+class TripNotFoundError(NotFoundError):
+    """The trip does not exist."""
 
 
 class UpstreamError(Exception):
